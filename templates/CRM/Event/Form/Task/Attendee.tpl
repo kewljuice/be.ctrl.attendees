@@ -1,28 +1,3 @@
-{*
- +--------------------------------------------------------------------+
- | CiviCRM version 4.6                                                |
- +--------------------------------------------------------------------+
- | Copyright CiviCRM LLC (c) 2004-2015                                |
- +--------------------------------------------------------------------+
- | This file is a part of CiviCRM.                                    |
- |                                                                    |
- | CiviCRM is free software; you can copy, modify, and distribute it  |
- | under the terms of the GNU Affero General Public License           |
- | Version 3, 19 November 2007 and the CiviCRM Licensing Exception.   |
- |                                                                    |
- | CiviCRM is distributed in the hope that it will be useful, but     |
- | WITHOUT ANY WARRANTY; without even the implied warranty of         |
- | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.               |
- | See the GNU Affero General Public License for more details.        |
- |                                                                    |
- | You should have received a copy of the GNU Affero General Public   |
- | License and the CiviCRM Licensing Exception along                  |
- | with this program; if not, contact CiviCRM LLC                     |
- | at info[AT]civicrm[DOT]org. If you have questions about the        |
- | GNU Affero General Public License or the licensing of CiviCRM,     |
- | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
- +--------------------------------------------------------------------+
-*}
 <p>
 
 {if $rows }
@@ -32,6 +7,35 @@
 <div class="spacer"></div>
 <br />
 <p>
+    <!-- php -->
+    {php}
+        // Get all results.
+        $results = $this->_tpl_vars[rows];
+        // print '<pre>'. print_r($results, true) .'</pre>';
+
+        // Get & loop all event ids.
+        $events = array_unique(array_column($results, 'event_id'));
+        foreach($events as $eid){
+
+            // Fetch vars for event information
+            $event = array_search($eid, array_column($results, 'event_id'));
+            $title = $results[$event][event_title];
+            $start = $results[$event][event_start_date];
+
+            // Print event information.
+            print "<h2>($eid) $title</h2>";
+            print "<div style='font-style: italic'>$start</div>";
+
+            // Get & loop participants by event id.
+            $participants = array_keys(array_column($results, 'event_id'), $eid);
+            foreach($participants as $pid){
+                $cid = $results[$pid][contact_id];
+                $name = $results[$pid][sort_name];
+                // Print participant information.
+                print "<li>($cid) $name</li>";
+            }
+        }
+    {/php}
 <table>
   <tr class="columnheader">
     <th>{ts}Name{/ts}</th>

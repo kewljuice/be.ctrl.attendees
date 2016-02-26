@@ -54,7 +54,7 @@ class CRM_Event_Form_Task_Attendee extends CRM_Event_Form_Task {
     $this->addButtons(array(
         array(
           'type' => 'next',
-          'name' => ts('Print Participant List'),
+          'name' => ts('Print Attendee List'),
           'js' => array('onclick' => 'window.print()'),
           'isDefault' => TRUE,
         ),
