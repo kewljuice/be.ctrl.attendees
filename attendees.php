@@ -134,13 +134,13 @@ function attendees_civicrm_searchTasks($objectType, &$tasks) {
   if ($objectType == 'event') {
     // Create new search task = 'Attendee list'
     $tasks['ctrl-1'] = array(
-      'title' => 'Print attendee list',
+      'title' => 'Print Attendee list',
       'class' => array('CRM_Event_Form_Task_Attendee'),
       'result' => FALSE
     );
     // Create new search task = 'Signature list'
     $tasks['ctrl-2'] = array(
-      'title' => 'Print signature list',
+      'title' => 'Print Signature list',
       'class' => array('CRM_Event_Form_Task_Signature'),
       'result' => FALSE
     );

@@ -33,6 +33,10 @@ class CRM_Event_Form_Task_Attendee extends CRM_Event_Form_Task {
       );
     }
 
+    // Display name and participation details of participants.
+    $participantIDs = implode(',', $this->_participantIds);
+    $this->assign('Participants', $participantIDs);
+
     $selector = new CRM_Event_Selector_Search($queryParams, $this->_action, $this->_componentClause);
     $controller = new CRM_Core_Selector_Controller($selector, NULL, $sortID, CRM_Core_Action::VIEW, $this, CRM_Core_Selector_Controller::SCREEN);
     $controller->setEmbedded(TRUE);
@@ -64,6 +68,50 @@ class CRM_Event_Form_Task_Attendee extends CRM_Event_Form_Task {
         ),
       )
     );
+
+    //
+    // Get rows from smarty template and alter/reorder them.
+    //
+    $smartyObject = $this->get_template_vars();
+    $results = $smartyObject['rows'];
+    dpm($results);
+    $eventList = array();
+
+    // Get & loop all events.
+    $events = array_unique(array_column($results, 'event_id'));
+    foreach ($events as $eid) {
+      // Fetch vars for event information.
+      $event = array_search($eid, array_column($results, 'event_id'));
+      $title = $results[$event]['event_title'];
+      $start = $results[$event]['event_start_date'];
+
+      // Get & loop participants by event id.
+      $participantList = array();
+      $participants = array_keys(array_column($results, 'event_id'), $eid);
+      foreach ($participants as $pid) {
+        $cid = $results[$pid]['contact_id'];
+        $name = $results[$pid]['sort_name'];
+        $status = $results[$pid]['participant_status'];
+        $role = $results[$pid]['participant_role_id'];
+        $participantList[] = array(
+          'cid' => $cid,
+          'name' => $name,
+          'status' => $status,
+          'role' => $role
+        );
+      }
+
+      // Add variables to event container.
+      $eventList[] = array(
+        'eid' => $eid,
+        'title' => $title,
+        'start' => $start,
+        'participants' => $participantList
+      );
+    }
+
+    // Assign new list to smarty as 'eventList'.
+    $this->assign('eventList', $eventList);
   }
 
   /**
