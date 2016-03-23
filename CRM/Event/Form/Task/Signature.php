@@ -74,7 +74,6 @@ class CRM_Event_Form_Task_Signature extends CRM_Event_Form_Task {
     //
     $smartyObject = $this->get_template_vars();
     $results = $smartyObject['rows'];
-    dpm($results);
     $eventList = array();
 
     // Get & loop all events.
