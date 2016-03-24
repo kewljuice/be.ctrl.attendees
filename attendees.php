@@ -144,6 +144,12 @@ function attendees_civicrm_searchTasks($objectType, &$tasks) {
       'class' => array('CRM_Event_Form_Task_Signature'),
       'result' => FALSE
     );
+    // Create new search task = 'Grid list'
+    $tasks['ctrl-3'] = array(
+      'title' => 'Print Signature grid',
+      'class' => array('CRM_Event_Form_Task_Grid'),
+      'result' => FALSE
+    );
   }
 }
 
