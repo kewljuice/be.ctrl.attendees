@@ -150,6 +150,18 @@ function attendees_civicrm_searchTasks($objectType, &$tasks) {
       'class' => array('CRM_Event_Form_Task_Grid'),
       'result' => FALSE
     );
+    // Create new search task = 'Attendee list with email'
+    $tasks['ctrl-4'] = array(
+      'title' => 'Print Attendee list with email',
+      'class' => array('CRM_Event_Form_Task_Email'),
+      'result' => FALSE
+    );
+    // Create new search task = 'Attendee list with employer'
+    $tasks['ctrl-5'] = array(
+      'title' => 'Print Attendee list with employer',
+      'class' => array('CRM_Event_Form_Task_Employer'),
+      'result' => FALSE
+    );
   }
 }
 
