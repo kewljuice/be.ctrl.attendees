@@ -61,12 +61,14 @@ function attendees_civicrm_disable() {
 /**
  * Implements hook_civicrm_upgrade().
  *
- * @param $op string, the type of operation being performed; 'check' or 'enqueue'
- * @param $queue CRM_Queue_Queue, (for 'enqueue') the modifiable list of pending up upgrade tasks
+ * @param $op string, the type of operation being performed; 'check' or
+ *   'enqueue'
+ * @param $queue CRM_Queue_Queue, (for 'enqueue') the modifiable list of
+ *   pending up upgrade tasks
  *
  * @return mixed
- *   Based on op. for 'check', returns array(boolean) (TRUE if upgrades are pending)
- *                for 'enqueue', returns void
+ *   Based on op. for 'check', returns array(boolean) (TRUE if upgrades are
+ *   pending) for 'enqueue', returns void
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_upgrade
  */
@@ -132,54 +134,35 @@ function attendees_civicrm_alterSettingsFolders(&$metaDataFolders = NULL) {
  */
 function attendees_civicrm_searchTasks($objectType, &$tasks) {
   if ($objectType == 'event') {
-    // Create new search task = 'Attendee list'
-    $tasks['ctrl-1'] = array(
-      'title' => 'Print Attendee list',
-      'class' => array('CRM_Event_Form_Task_Attendee'),
-      'result' => FALSE
-    );
-    // Create new search task = 'Signature list'
-    $tasks['ctrl-2'] = array(
-      'title' => 'Print Signature list',
-      'class' => array('CRM_Event_Form_Task_Signature'),
-      'result' => FALSE
-    );
-    // Create new search task = 'Grid list'
-    $tasks['ctrl-3'] = array(
-      'title' => 'Print Signature grid',
-      'class' => array('CRM_Event_Form_Task_Grid'),
-      'result' => FALSE
-    );
-    // Create new search task = 'Attendee list with email'
-    $tasks['ctrl-4'] = array(
-      'title' => 'Print Attendee list with email',
-      'class' => array('CRM_Event_Form_Task_Email'),
-      'result' => FALSE
-    );
-    // Create new search task = 'Attendee list with employer'
-    $tasks['ctrl-5'] = array(
-      'title' => 'Print Attendee list with employer',
-      'class' => array('CRM_Event_Form_Task_Employer'),
-      'result' => FALSE
-    );
+    // Create new task = 'Attendee list'
+    $tasks['ctrl-1'] = [
+      'title' => ts('Print Participant List'),
+      'class' => ['CRM_Event_Form_Task_Attendee_List'],
+      'result' => FALSE,
+    ];
+    // Create new task = 'Signature list'
+    $tasks['ctrl-2'] = [
+      'title' => ts('Signature') . ' ' . ts('List'),
+      'class' => ['CRM_Event_Form_Task_Signature_List'],
+      'result' => FALSE,
+    ];
+    // Create new task = 'Grid list'
+    $tasks['ctrl-3'] = [
+      'title' => ts('Signature') . ' ' . ts('Grid'),
+      'class' => ['CRM_Event_Form_Task_Grid_List'],
+      'result' => FALSE,
+    ];
+    // Create new task = 'Attendee list with email'
+    $tasks['ctrl-4'] = [
+      'title' => ts('Signature') . ' ' . ts('List') . ' + ' . ts('Email'),
+      'class' => ['CRM_Event_Form_Task_Email_List'],
+      'result' => FALSE,
+    ];
+    // Create new task = 'Attendee list with employer'
+    $tasks['ctrl-5'] = [
+      'title' => ts('Print Participant List') . ' + ' . ts('Employer'),
+      'class' => ['CRM_Event_Form_Task_Employer_List'],
+      'result' => FALSE,
+    ];
   }
 }
-
-/**
- * Implements hook_civicrm_navigationMenu().
- *
- * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_navigationMenu
- */
-/*
-function attendees_civicrm_navigationMenu(&$menu) {
-  _attendees_civix_insert_navigation_menu($menu, NULL, array(
-    'label' => ts('The Page', array('domain' => 'be.ctrl.attendees')),
-    'name' => 'the_page',
-    'url' => 'civicrm/the-page',
-    'permission' => 'access CiviReport,access CiviContribute',
-    'operator' => 'OR',
-    'separator' => 0,
-  ));
-  _attendees_civix_navigationMenu($menu);
-}
-*/

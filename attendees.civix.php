@@ -19,14 +19,14 @@ function _attendees_civix_civicrm_config(&$config = NULL) {
   $extRoot = dirname(__FILE__) . DIRECTORY_SEPARATOR;
   $extDir = $extRoot . 'templates';
 
-  if ( is_array( $template->template_dir ) ) {
-      array_unshift( $template->template_dir, $extDir );
+  if (is_array($template->template_dir)) {
+    array_unshift($template->template_dir, $extDir);
   }
   else {
-      $template->template_dir = array( $extDir, $template->template_dir );
+    $template->template_dir = [$extDir, $template->template_dir];
   }
 
-  $include_path = $extRoot . PATH_SEPARATOR . get_include_path( );
+  $include_path = $extRoot . PATH_SEPARATOR . get_include_path();
   set_include_path($include_path);
 }
 
@@ -75,7 +75,7 @@ function _attendees_civix_civicrm_uninstall() {
 function _attendees_civix_civicrm_enable() {
   _attendees_civix_civicrm_config();
   if ($upgrader = _attendees_civix_upgrader()) {
-    if (is_callable(array($upgrader, 'onEnable'))) {
+    if (is_callable([$upgrader, 'onEnable'])) {
       $upgrader->onEnable();
     }
   }
@@ -90,7 +90,7 @@ function _attendees_civix_civicrm_enable() {
 function _attendees_civix_civicrm_disable() {
   _attendees_civix_civicrm_config();
   if ($upgrader = _attendees_civix_upgrader()) {
-    if (is_callable(array($upgrader, 'onDisable'))) {
+    if (is_callable([$upgrader, 'onDisable'])) {
       $upgrader->onDisable();
     }
   }
@@ -99,11 +99,13 @@ function _attendees_civix_civicrm_disable() {
 /**
  * (Delegated) Implements hook_civicrm_upgrade().
  *
- * @param $op string, the type of operation being performed; 'check' or 'enqueue'
- * @param $queue CRM_Queue_Queue, (for 'enqueue') the modifiable list of pending up upgrade tasks
+ * @param $op string, the type of operation being performed; 'check' or
+ *   'enqueue'
+ * @param $queue CRM_Queue_Queue, (for 'enqueue') the modifiable list of
+ *   pending up upgrade tasks
  *
- * @return mixed  based on op. for 'check', returns array(boolean) (TRUE if upgrades are pending)
- *                for 'enqueue', returns void
+ * @return mixed  based on op. for 'check', returns array(boolean) (TRUE if
+ *   upgrades are pending) for 'enqueue', returns void
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_upgrade
  */
@@ -117,7 +119,7 @@ function _attendees_civix_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
  * @return CRM_Attendees_Upgrader
  */
 function _attendees_civix_upgrader() {
-  if (!file_exists(__DIR__.'/CRM/Attendees/Upgrader.php')) {
+  if (!file_exists(__DIR__ . '/CRM/Attendees/Upgrader.php')) {
     return NULL;
   }
   else {
@@ -133,15 +135,16 @@ function _attendees_civix_upgrader() {
  *
  * @param $dir string, base dir
  * @param $pattern string, glob pattern, eg "*.txt"
+ *
  * @return array(string)
  */
 function _attendees_civix_find_files($dir, $pattern) {
-  if (is_callable(array('CRM_Utils_File', 'findFiles'))) {
+  if (is_callable(['CRM_Utils_File', 'findFiles'])) {
     return CRM_Utils_File::findFiles($dir, $pattern);
   }
 
-  $todos = array($dir);
-  $result = array();
+  $todos = [$dir];
+  $result = [];
   while (!empty($todos)) {
     $subdir = array_shift($todos);
     foreach (_attendees_civix_glob("$subdir/$pattern") as $match) {
@@ -153,7 +156,8 @@ function _attendees_civix_find_files($dir, $pattern) {
       while (FALSE !== ($entry = readdir($dh))) {
         $path = $subdir . DIRECTORY_SEPARATOR . $entry;
         if ($entry{0} == '.') {
-        } elseif (is_dir($path)) {
+        }
+        elseif (is_dir($path)) {
           $todos[] = $path;
         }
       }
@@ -162,6 +166,7 @@ function _attendees_civix_find_files($dir, $pattern) {
   }
   return $result;
 }
+
 /**
  * (Delegated) Implements hook_civicrm_managed().
  *
@@ -203,11 +208,11 @@ function _attendees_civix_civicrm_caseTypes(&$caseTypes) {
       CRM_Core_Error::fatal($errorMessage);
       // throw new CRM_Core_Exception($errorMessage);
     }
-    $caseTypes[$name] = array(
+    $caseTypes[$name] = [
       'module' => 'be.ctrl.attendees',
       'name' => $name,
       'file' => $file,
-    );
+    ];
   }
 }
 
@@ -245,40 +250,46 @@ function _attendees_civix_civicrm_angularModules(&$angularModules) {
  * This wrapper provides consistency.
  *
  * @link http://php.net/glob
+ *
  * @param string $pattern
+ *
  * @return array, possibly empty
  */
 function _attendees_civix_glob($pattern) {
   $result = glob($pattern);
-  return is_array($result) ? $result : array();
+  return is_array($result) ? $result : [];
 }
 
 /**
  * Inserts a navigation menu item at a given place in the hierarchy.
  *
  * @param array $menu - menu hierarchy
- * @param string $path - path where insertion should happen (ie. Administer/System Settings)
- * @param array $item - menu you need to insert (parent/child attributes will be filled for you)
+ * @param string $path - path where insertion should happen (ie.
+ *   Administer/System Settings)
+ * @param array $item - menu you need to insert (parent/child attributes will
+ *   be filled for you)
  */
 function _attendees_civix_insert_navigation_menu(&$menu, $path, $item) {
   // If we are done going down the path, insert menu
   if (empty($path)) {
-    $menu[] = array(
-      'attributes' => array_merge(array(
-        'label'      => CRM_Utils_Array::value('name', $item),
-        'active'     => 1,
-      ), $item),
-    );
+    $menu[] = [
+      'attributes' => array_merge([
+        'label' => CRM_Utils_Array::value('name', $item),
+        'active' => 1,
+      ], $item),
+    ];
     return TRUE;
   }
   else {
     // Find an recurse into the next level down
-    $found = false;
+    $found = FALSE;
     $path = explode('/', $path);
     $first = array_shift($path);
     foreach ($menu as $key => &$entry) {
       if ($entry['attributes']['name'] == $first) {
-        if (!$entry['child']) $entry['child'] = array();
+        if (!$entry['child']) {
+          $entry['child'] = [];
+        }
         $found = _attendees_civix_insert_navigation_menu($entry['child'], implode('/', $path), $item, $key);
       }
     }
@@ -290,7 +301,7 @@ function _attendees_civix_insert_navigation_menu(&$menu, $path, $item) {
  * (Delegated) Implements hook_civicrm_navigationMenu().
  */
 function _attendees_civix_navigationMenu(&$nodes) {
-  if (!is_callable(array('CRM_Core_BAO_Navigation', 'fixNavigationMenu'))) {
+  if (!is_callable(['CRM_Core_BAO_Navigation', 'fixNavigationMenu'])) {
     _attendees_civix_fixNavigationMenu($nodes);
   }
 }
@@ -301,11 +312,11 @@ function _attendees_civix_navigationMenu(&$nodes) {
  */
 function _attendees_civix_fixNavigationMenu(&$nodes) {
   $maxNavID = 1;
-  array_walk_recursive($nodes, function($item, $key) use (&$maxNavID) {
+  array_walk_recursive($nodes, function ($item, $key) use (&$maxNavID) {
     if ($key === 'navID') {
       $maxNavID = max($maxNavID, $item);
     }
-    });
+  });
   _attendees_civix_fixNavigationMenuItems($nodes, $maxNavID, NULL);
 }
 
@@ -342,7 +353,7 @@ function _attendees_civix_civicrm_alterSettingsFolders(&$metaDataFolders = NULL)
   $configured = TRUE;
 
   $settingsDir = __DIR__ . DIRECTORY_SEPARATOR . 'settings';
-  if(is_dir($settingsDir) && !in_array($settingsDir, $metaDataFolders)) {
+  if (is_dir($settingsDir) && !in_array($settingsDir, $metaDataFolders)) {
     $metaDataFolders[] = $settingsDir;
   }
 }
